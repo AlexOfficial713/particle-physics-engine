@@ -36,7 +36,7 @@ export default class Particle {
     }
 
     setPostion(x, y) {
-        this.ctx.clearRect(this.x - 1, this.y - 1, this.x + 1, this.y + 1);
+        this.ctx.clearRect(this.x - 3, this.y - 3, 6, 6);
         
         this.ctx.beginPath();
         this.ctx.rect(x, y, 1, 1);
@@ -75,20 +75,35 @@ export default class Particle {
     //DeltaTime is time since last frame in seconds
     tickFunctions(deltaTime) {
         if (this.velocity[0] != 0 || this.velocity[1] != 0) {
-            if (this.x + (this.velocity[0] * deltaTime) <= 0 || this.x + (this.velocity[0] * deltaTime) >= 100) {
-                this.velocity[0] = -this.velocity[0] + 10;
-                this.acceleration[0] = 0
-            }
-            if (this.y + (this.velocity[1] * deltaTime) <= 0 || this.y + (this.velocity[1] * deltaTime) >= 100) {
-                console.log(window_height + " : " + this.y)
-                if (this.velocity[1] > 0) {
-                    if (-this.velocity[1] + 10 < 0) this.velocity[1] = -this.velocity[1] + 10;
-                }
-                if (this.velocity[1] < 0) {
+            const bounceDecrease = 5;
 
+            if (this.x + (this.velocity[0] * deltaTime) <= 0) {
+                //velocity is initially negative
+                if (-this.velocity[0] - bounceDecrease > 0) this.velocity[0] = -this.velocity[0] - bounceDecrease;
+                else {
+                    this.velocity[0] = 0;
+                    this.setPostion(0, this.y);
                 }
-                
-                this.acceleration[1] = 0;
+            }
+            if (this.x + (this.velocity[0] * deltaTime) >= window_width) {
+                //velocity is initially positive
+                if (-this.velocity[0] + bounceDecrease < 0) this.velocity[0] = -this.velocity[0] + bounceDecrease;
+                else {
+                    this.velocity[0] = 0;
+                    this.setPostion(window_width, this.y);
+                }
+            }
+            if (this.y + (this.velocity[1] * deltaTime) <= 0) {
+                //velocity is initially negative
+                if (-this.velocity[1] - bounceDecrease > 0) this.velocity[1] = -this.velocity[1] - bounceDecrease;
+            }
+            if (this.y + (this.velocity[1] * deltaTime) >= window_height) {
+                //velocity is initially positive
+                if (-this.velocity[1] + bounceDecrease < 0) this.velocity[1] = -this.velocity[1] + bounceDecrease;
+                else {
+                    this.velocity[1] = 0;
+                    this.setPostion(this.x, window_height);
+                }
             }
 
             this.setPostion(this.x + (this.velocity[0] * deltaTime), this.y + (this.velocity[1] * deltaTime))
