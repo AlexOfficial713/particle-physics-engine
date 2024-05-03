@@ -81,7 +81,13 @@ export default class Particle {
             }
             if (this.y + (this.velocity[1] * deltaTime) <= 0 || this.y + (this.velocity[1] * deltaTime) >= 100) {
                 console.log(window_height + " : " + this.y)
-                this.velocity[1] = -this.velocity[1] + 10;
+                if (this.velocity[1] > 0) {
+                    if (-this.velocity[1] + 10 < 0) this.velocity[1] = -this.velocity[1] + 10;
+                }
+                if (this.velocity[1] < 0) {
+
+                }
+                
                 this.acceleration[1] = 0;
             }
 

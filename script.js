@@ -23,7 +23,7 @@ let tick = () => {
 
     let randChance = Math.floor((Math.random() * 10) + 1);
     if (randChance == 1 && particleList.length < 11) {
-        let xPos = Math.floor((Math.random() * window_width) + 1);
+        let xPos = Math.floor((Math.random() * 100) + 1);
         new Particle(ctx, xPos, 10);
     }
 
