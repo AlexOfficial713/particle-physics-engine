@@ -1,4 +1,5 @@
 import Particle from "./particle.js";
+import User from "./user.js";
 
 export const gravity = 0.1;
 export let particleList = [];
@@ -12,18 +13,28 @@ viewPort.id = "viewPort";
 export let window_height = viewPort.height;
 export let window_width = viewPort.width;
 
-let particle = new Particle(ctx, 10, 10);
+export let user = new User();
 
 export let randParticleSpawn = () => {
     let xPos = Math.floor((Math.random() * window_width.valueOf()) + 1);
-    let yPos = 10;
+    let yPos = 1;
     return [xPos, yPos];
 }
 
 export let randParticleVel = () => {
-    let randVelX = Math.floor((Math.random() * 21) - 10);
-    let randVelY = Math.floor((Math.random() * 21) - 10);
+    let randVelX = Math.floor((Math.random() * 51) - 10);
+    let randVelY = Math.floor((Math.random() * 51) - 10);
     return [randVelX, randVelY];
+}
+
+export function boxCollisionDetection(x1, y1, w1, h1, x2, y2, w2, h2) {
+    if (
+        x1 + w1 >= x2 &&
+        x1 <= x2 + w2 &&
+        y1 + h1 >= y2 &&
+        y1 <= y2 + h2
+    ) return true;
+    else return false;
 }
 
 //Function called every frame
@@ -34,9 +45,10 @@ let tick = () => {
     particleList.forEach(element => {
         element.tickFunctions(deltaTime);
     });
+    user.tickFunctions();
 
     let randChance = Math.floor((Math.random() * 10) + 1);
-    if (randChance == 1 && particleList.length < 51) {
+    if (randChance == 1 && particleList.length < 101) {
         let location = randParticleSpawn();
         let velPair = randParticleVel();
         let par = new Particle(ctx, location[0], location[1]);

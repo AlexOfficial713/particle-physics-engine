@@ -1,4 +1,4 @@
-import { gravity, particleList, window_height, window_width, randParticleSpawn, randParticleVel } from "./script.js";
+import { gravity, particleList, window_height, window_width, randParticleSpawn, randParticleVel, boxCollisionDetection, user } from "./script.js";
 
 class Force {
     constructor(xComponent, yComponent, id) {
@@ -104,6 +104,15 @@ export default class Particle {
                     this.velocity[1] = 0;
                     this.setPosition(this.x, window_height);
                 }
+            }
+
+            //collision detection
+            let userBounding = user.div.getBoundingClientRect();
+
+            if (boxCollisionDetection(userBounding.x.valueOf(), userBounding.y.valueOf(), userBounding.width.valueOf(), userBounding.height.valueOf(), this.x.valueOf() - 1, this.y.valueOf() - 1, 1, 1)) {
+                console.log("collision")
+                this.velocity[0] = 0
+                this.velocity[1] = 0
             }
 
             this.setPosition(this.x + (this.velocity[0] * deltaTime), this.y + (this.velocity[1] * deltaTime))
