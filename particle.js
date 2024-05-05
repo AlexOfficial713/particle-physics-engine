@@ -1,4 +1,4 @@
-import { gravity, particleList, window_height, window_width } from "./script.js";
+import { gravity, particleList, window_height, window_width, randParticleSpawn, randParticleVel } from "./script.js";
 
 class Force {
     constructor(xComponent, yComponent, id) {
@@ -14,7 +14,6 @@ export default class Particle {
         this.ctx = ctx;
         this.mass = mass;
         this.forces = [];
-        this.idleTime = 0;
 
         ctx.beginPath();
         ctx.rect(x, y, 1, 1);
@@ -36,7 +35,7 @@ export default class Particle {
         });
     }
 
-    setPostion(x, y) {
+    setPosition(x, y) {
         this.ctx.clearRect(this.x - 3, this.y - 3, 6, 6);
         
         this.ctx.beginPath();
@@ -83,7 +82,7 @@ export default class Particle {
                 if (-this.velocity[0] - bounceDecrease > 0) this.velocity[0] = -this.velocity[0] - bounceDecrease;
                 else {
                     this.velocity[0] = 0;
-                    this.setPostion(0, this.y);
+                    this.setPosition(0, this.y);
                 }
             }
             if (this.x + (this.velocity[0] * deltaTime) >= window_width) {
@@ -91,7 +90,7 @@ export default class Particle {
                 if (-this.velocity[0] + bounceDecrease < 0) this.velocity[0] = -this.velocity[0] + bounceDecrease;
                 else {
                     this.velocity[0] = 0;
-                    this.setPostion(window_width, this.y);
+                    this.setPosition(window_width, this.y);
                 }
             }
             if (this.y + (this.velocity[1] * deltaTime) <= 0) {
@@ -103,11 +102,11 @@ export default class Particle {
                 if (-this.velocity[1] + bounceDecrease < 0) this.velocity[1] = -this.velocity[1] + bounceDecrease;
                 else {
                     this.velocity[1] = 0;
-                    this.setPostion(this.x, window_height);
+                    this.setPosition(this.x, window_height);
                 }
             }
 
-            this.setPostion(this.x + (this.velocity[0] * deltaTime), this.y + (this.velocity[1] * deltaTime))
+            this.setPosition(this.x + (this.velocity[0] * deltaTime), this.y + (this.velocity[1] * deltaTime))
         }
         if (this.acceleration[0] != 0 || this.acceleration[1] != 0) {
             this.velocity[0] = this.velocity[0] + (this.acceleration[0] * deltaTime);
@@ -116,6 +115,15 @@ export default class Particle {
         if (this.forces.length > 0) {
             this.acceleration[0] = this.netForce[0] / this.mass;
             this.acceleration[1] = this.netForce[1] / this.mass;
+        }
+
+        let randRespawnChance = Math.floor((Math.random() * 1001) + 1);
+        if (randRespawnChance == 1) {
+            let location = randParticleSpawn();
+            let randVel = randParticleVel();
+            this.setPosition(location[0], location[1]);
+            this.velocity[0] = randVel[0];
+            this.velocity[1] = randVel[1];
         }
 
         this.applyForce(new Force(0, gravity * this.mass, "gravity"));

@@ -15,7 +15,7 @@ export let window_width = viewPort.width;
 let particle = new Particle(ctx, 10, 10);
 
 export let randParticleSpawn = () => {
-    let xPos = Math.floor((Math.random() * 100) + 1);
+    let xPos = Math.floor((Math.random() * window_width.valueOf()) + 1);
     let yPos = 10;
     return [xPos, yPos];
 }
