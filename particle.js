@@ -14,6 +14,7 @@ export default class Particle {
         this.ctx = ctx;
         this.mass = mass;
         this.forces = [];
+        this.idleTime = 0;
 
         ctx.beginPath();
         ctx.rect(x, y, 1, 1);

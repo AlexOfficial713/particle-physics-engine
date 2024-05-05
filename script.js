@@ -14,6 +14,18 @@ export let window_width = viewPort.width;
 
 let particle = new Particle(ctx, 10, 10);
 
+export let randParticleSpawn = () => {
+    let xPos = Math.floor((Math.random() * 100) + 1);
+    let yPos = 10;
+    return [xPos, yPos];
+}
+
+export let randParticleVel = () => {
+    let randVelX = Math.floor((Math.random() * 21) - 10);
+    let randVelY = Math.floor((Math.random() * 21) - 10);
+    return [randVelX, randVelY];
+}
+
 //Function called every frame
 let tick = () => {
     let deltaTime = 0;
@@ -25,12 +37,11 @@ let tick = () => {
 
     let randChance = Math.floor((Math.random() * 10) + 1);
     if (randChance == 1 && particleList.length < 51) {
-        let xPos = Math.floor((Math.random() * 100) + 1);
-        let randVelX = Math.floor((Math.random() * 21) - 10);
-        let randVelY = Math.floor((Math.random() * 21) - 10);
-        let par = new Particle(ctx, xPos, 10);
-        par.velocity[0] = randVelX;
-        par.velocity[1] = randVelY;
+        let location = randParticleSpawn();
+        let velPair = randParticleVel();
+        let par = new Particle(ctx, location[0], location[1]);
+        par.velocity[0] = velPair[0];
+        par.velocity[1] = velPair[1];
     }
 
     /*clearCounter++;
