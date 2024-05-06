@@ -28,14 +28,19 @@ export let randParticleVel = () => {
 }
 
 export function boxCollisionDetection(x1, y1, w1, h1, x2, y2, w2, h2) {
-    if (
-        x1 + w1 >= x2 &&
-        x1 <= x2 + w2 &&
-        y1 + h1 >= y2 &&
-        y1 <= y2 + h2
-    ) return true;
-    else return false;
+    const rect1Bottom = y1 + h1;
+    const rect1Right = x1 + w1;
+    const rect2Bottom = y2 + h2;
+    const rect2Right = x2 + w2;
+
+    // Check for collision
+    return !(rect1Bottom < y2 || y1 > rect2Bottom || rect1Right < x2 || x1 > rect2Right);
 }
+let location = randParticleSpawn();
+        let velPair = randParticleVel();
+        let par = new Particle(ctx, location[0], location[1]);
+        par.velocity[0] = velPair[0];
+        par.velocity[1] = velPair[1];
 
 //Function called every frame
 let tick = () => {
@@ -47,20 +52,14 @@ let tick = () => {
     });
     user.tickFunctions();
 
-    let randChance = Math.floor((Math.random() * 10) + 1);
+    /*let randChance = Math.floor((Math.random() * 10) + 1);
     if (randChance == 1 && particleList.length < 101) {
         let location = randParticleSpawn();
         let velPair = randParticleVel();
         let par = new Particle(ctx, location[0], location[1]);
         par.velocity[0] = velPair[0];
         par.velocity[1] = velPair[1];
-    }
-
-    /*clearCounter++;
-    if (clearCounter = 10) {
-        ctx.clearRect(0, 0, window_width, window_height);
     }*/
-
 
     lastTick = Date.now();
     requestAnimationFrame(tick);

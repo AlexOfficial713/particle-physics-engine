@@ -9,7 +9,7 @@ class Force {
 }
 
 export default class Particle {
-    constructor(ctx, x, y, mass = 5, color = "#FF0000") {
+    constructor(ctx, x, y, color = "#FF0000", mass = 5) {
         this.color = color;
         this.ctx = ctx;
         this.mass = mass;
@@ -105,17 +105,6 @@ export default class Particle {
                     this.setPosition(this.x, window_height);
                 }
             }
-
-            //collision detection
-            let userBounding = user.div.getBoundingClientRect();
-
-            if (boxCollisionDetection(userBounding.x.valueOf(), userBounding.y.valueOf(), userBounding.width.valueOf(), userBounding.height.valueOf(), this.x.valueOf() - 1, this.y.valueOf() - 1, 1, 1)) {
-                console.log("collision")
-                this.velocity[0] = 0
-                this.velocity[1] = 0
-            }
-
-            this.setPosition(this.x + (this.velocity[0] * deltaTime), this.y + (this.velocity[1] * deltaTime))
         }
         if (this.acceleration[0] != 0 || this.acceleration[1] != 0) {
             this.velocity[0] = this.velocity[0] + (this.acceleration[0] * deltaTime);
@@ -126,14 +115,25 @@ export default class Particle {
             this.acceleration[1] = this.netForce[1] / this.mass;
         }
 
-        let randRespawnChance = Math.floor((Math.random() * 1001) + 1);
+        /*let randRespawnChance = Math.floor((Math.random() * 1001) + 1);
         if (randRespawnChance == 1) {
             let location = randParticleSpawn();
             let randVel = randParticleVel();
             this.setPosition(location[0], location[1]);
             this.velocity[0] = randVel[0];
             this.velocity[1] = randVel[1];
+        }*/
+
+        //collision detection
+        if (boxCollisionDetection(user.x, user.y, user.width, user.height, this.x, this.y, 1, 1)) { 
+            if (particleList.indexOf(this) == 0) {
+                console.log("collision")
+            }
+            this.velocity[0] = 0
+            this.velocity[1] = 0
         }
+
+        this.setPosition(this.x + (this.velocity[0] * deltaTime), this.y + (this.velocity[1] * deltaTime))
 
         this.applyForce(new Force(0, gravity * this.mass, "gravity"));
     }
